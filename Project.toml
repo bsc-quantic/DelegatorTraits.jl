@@ -1,0 +1,7 @@
+name = "DelegatorTraits"
+uuid = "d83dbd90-3e00-4b33-84f1-398adcf3b35e"
+authors = ["Sergio Sánchez Ramírez <sergio.sanchez.ramirez+git@bsc.es>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.6"
