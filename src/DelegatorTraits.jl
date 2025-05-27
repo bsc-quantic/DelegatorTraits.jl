@@ -54,6 +54,48 @@ abstract type ImplementorTrait end
 struct Implements <: ImplementorTrait end
 struct NotImplements <: ImplementorTrait end
 
+"""
+    interface(f)
+
+Returns the [`Interface`](@ref) that `f` belongs to.
+"""
+function interface end
+
+macro assign_to(fname, iface)
+    @assert fname isa Symbol
+    @assert interface isa Symbol
+
+    :($interface(::typeof($fname)) = $iface())
+end
+
+macro interface_function(iface, fname)
+    quote
+        function $fname end
+        :($interface(::typeof($fname)) = $iface())
+    end
+end
+
+"""
+    IsAllowedToCall(f, x)
+    IsAllowedToCall(interface, f, x)
+
+Check if the function `f` is allowed to be called on object `x`.
+This is useful for mutating functions for which users may want to restrict mutation.
+"""
+abstract type IsAllowedToCall end
+struct NotAllowedToCall <: DelegatedCallPermisionTrait end
+struct AllowedToCall <: DelegatedCallPermisionTrait end
+
+IsAllowedToCall(f, x) = IsAllowedToCall(interface(f), f, x)
+IsAllowedToCall(interface, f, x) = IsAllowedToCall(interface, f, x, DelegatorTrait(interface, x))
+IsAllowedToCall(interface, f, x, ::DelegateToField) = IsAllowedToCall(f, delegator(interface, x))
+IsAllowedToCall(interface, f, x, ::DontDelegate) = AllowedToCall()
+
+checkpermission(f, x) = checkpermission(f, x, IsAllowedToCall(f, x))
+checkpermission(interface, f, x) = checkpermission(f, x, IsAllowedToCall(interface, f, x))
+checkpermission(f, x, ::AllowedToCall) = nothing
+checkpermission(f, x, ::NotAllowedToCall) = throw(ArgumentError("Function $f is not allowed to be called on object $x"))
+
 # recurse check to delegator
 """
     ImplementorTrait(interface, x)
