@@ -54,6 +54,24 @@ abstract type ImplementorTrait end
 struct Implements <: ImplementorTrait end
 struct NotImplements <: ImplementorTrait end
 
+# recurse check to delegator
+"""
+    ImplementorTrait(interface, x)
+
+Check if `x` implements the `interface`. If it does, return `Implements()`, otherwise return `NotImplements()`.
+
+!!! note
+
+    Implementors of an interface should declare that they implement an interface by adding the following code:
+
+    ```julia
+    ImplementorTrait(::MyInterface, ::MyImplementor) = Implements()
+    ```
+"""
+ImplementorTrait(interface, x) = ImplementorTrait(interface, x, DelegatorTrait(interface, x))
+ImplementorTrait(interface, x, ::DontDelegate) = NotImplements()
+ImplementorTrait(interface, x, ::DelegateToField{P}) where {P} = ImplementorTrait(interface, delegator(interface, x))
+
 """
     interface(f)
 
@@ -95,24 +113,6 @@ checkpermission(f, x) = checkpermission(f, x, IsAllowedToCall(f, x))
 checkpermission(interface, f, x) = checkpermission(f, x, IsAllowedToCall(interface, f, x))
 checkpermission(f, x, ::AllowedToCall) = nothing
 checkpermission(f, x, ::NotAllowedToCall) = throw(ArgumentError("Function $f is not allowed to be called on object $x"))
-
-# recurse check to delegator
-"""
-    ImplementorTrait(interface, x)
-
-Check if `x` implements the `interface`. If it does, return `Implements()`, otherwise return `NotImplements()`.
-
-!!! note
-
-    Implementors of an interface should declare that they implement an interface by adding the following code:
-
-    ```julia
-    ImplementorTrait(::MyInterface, ::MyImplementor) = Implements()
-    ```
-"""
-ImplementorTrait(interface, x) = ImplementorTrait(interface, x, DelegatorTrait(interface, x))
-ImplementorTrait(interface, x, ::DontDelegate) = NotImplements()
-ImplementorTrait(interface, x, ::DelegateToField{P}) where {P} = ImplementorTrait(interface, delegator(interface, x))
 
 fallback(f) = @debug "Falling back to default method" f
 
