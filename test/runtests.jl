@@ -1,5 +1,6 @@
 using Test
 using DelegatorTraits
+using DelegatorTraits: Implements, NotImplements, ImplementorTrait
 
 @testset "Unit" begin
     struct MyInterface1 <: Interface end
