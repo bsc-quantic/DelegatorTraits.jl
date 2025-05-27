@@ -83,9 +83,8 @@ CodeInfo(
 
 ## Handling mutation with Effects
 
-!!! warn
-
-    Effects are a experimental feature not yet ready for production. Here is a little description of the feature, but you shouldn't yet use it because the API can break.
+> [!CAUTION]
+> Effects are a experimental feature not yet ready for production. Here is a little description of the feature, but you shouldn't yet use it because the API can break.
 
 One of the problems of delegation is that mutation can break "mappings" on higher delegated levels.
 For example, given a `Network` or graph, what if there we have a network / graph whose vertices have _weights_?
