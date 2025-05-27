@@ -2,8 +2,24 @@ module DelegatorTraits
 
 export Interface
 export DelegatorTrait, DontDelegate, DelegateToField, delegator
-export ImplementorTrait, Implements, NotImplements
+export @interface_function
 export fallback
+
+@static if Base.VERSION >= v"1.11.0"
+    macro public(names)
+        #! format: off
+        names isa Symbol && return :(public $names)
+        #! format: on
+
+        @assert Base.isexpr(names, :tuple) "Expected a tuple of symbols"
+        return esc(Expr(:public, names.args...))
+    end
+else
+    macro public(names) end
+end
+
+@public ImplementorTrait, Implements, NotImplements
+@public IsAllowedToCall, NotAllowedToCall, AllowedToCall, checkpermission
 
 """
     Interface
