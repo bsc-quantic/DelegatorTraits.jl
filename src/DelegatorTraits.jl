@@ -104,10 +104,10 @@ abstract type IsAllowedToCall end
 struct NotAllowedToCall <: IsAllowedToCall end
 struct AllowedToCall <: IsAllowedToCall end
 
-IsAllowedToCall(f, x) = IsAllowedToCall(interface(f), f, x)
-IsAllowedToCall(interface, f, x) = IsAllowedToCall(interface, f, x, DelegatorTrait(interface, x))
-IsAllowedToCall(interface, f, x, ::DelegateToField) = IsAllowedToCall(f, delegator(interface, x))
-IsAllowedToCall(interface, f, x, ::DontDelegate) = AllowedToCall()
+IsAllowedToCall(f, args) = IsAllowedToCall(interface(f), f, args)
+IsAllowedToCall(interface, f, args) = IsAllowedToCall(interface, f, args, DelegatorTrait(interface, args))
+IsAllowedToCall(interface, f, args, ::DelegateToField) = IsAllowedToCall(f, delegator(interface, args))
+IsAllowedToCall(interface, f, args, ::DontDelegate) = AllowedToCall()
 
 checkpermission(f, x) = checkpermission(f, x, IsAllowedToCall(f, x))
 checkpermission(interface, f, x) = checkpermission(f, x, IsAllowedToCall(interface, f, x))
