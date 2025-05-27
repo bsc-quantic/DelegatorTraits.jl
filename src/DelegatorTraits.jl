@@ -83,8 +83,8 @@ Check if the function `f` is allowed to be called on object `x`.
 This is useful for mutating functions for which users may want to restrict mutation.
 """
 abstract type IsAllowedToCall end
-struct NotAllowedToCall <: DelegatedCallPermisionTrait end
-struct AllowedToCall <: DelegatedCallPermisionTrait end
+struct NotAllowedToCall <: IsAllowedToCall end
+struct AllowedToCall <: IsAllowedToCall end
 
 IsAllowedToCall(f, x) = IsAllowedToCall(interface(f), f, x)
 IsAllowedToCall(interface, f, x) = IsAllowedToCall(interface, f, x, DelegatorTrait(interface, x))
