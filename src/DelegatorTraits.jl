@@ -19,8 +19,8 @@ abstract type Interface end
 Abstract type for delegator traits. New delegator traits should subtype this type.
 Currently, there are two delegator traits:
 
-- `DontDelegate`: the interface does not delegate to any field.
-- `DelegateToField{T}`: the interface delegates to field `T` of the object..
+  - `DontDelegate`: the interface does not delegate to any field.
+  - `DelegateToField{T}`: the interface delegates to field `T` of the object..
 """
 abstract type DelegatorTrait end
 struct DontDelegate <: DelegatorTrait end
@@ -48,8 +48,8 @@ delegator(interface, x, ::DelegateToField{P}) where {P} = getproperty(x, P)
 
 Abstract type for implementor traits. It has two traits:
 
-- `Implements`: the interface is implemented by the object.
-- `NotImplements`: the interface is not implemented by the object.
+  - `Implements`: the interface is implemented by the object.
+  - `NotImplements`: the interface is not implemented by the object.
 """
 abstract type ImplementorTrait end
 struct Implements <: ImplementorTrait end
@@ -62,6 +62,7 @@ struct NotImplements <: ImplementorTrait end
 Check if `x` implements the `interface`. If it does, return `Implements()`, otherwise return `NotImplements()`.
 
 !!! note
+
     Implementors of an interface should declare that they implement an interface by adding the following code:
 
     ```julia
