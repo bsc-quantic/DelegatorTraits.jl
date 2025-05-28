@@ -8,7 +8,7 @@ export fallback
 @static if Base.VERSION >= v"1.11.0"
     macro public(names)
         #! format: off
-        names isa Symbol && return :(public $names)
+        names isa Symbol && return Expr(:public, esc(names))
         #! format: on
 
         @assert Base.isexpr(names, :tuple) "Expected a tuple of symbols"
