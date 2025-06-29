@@ -42,7 +42,7 @@ struct DontDelegate <: DelegatorTrait end
 struct DelegateToField{T} <: DelegatorTrait end
 
 """
-DelegatorTrait(interface, x)
+    DelegatorTrait(interface, x)
 
 Get the delegator trait of object `x` for `interface`.
 Defaults to `DontDelegate()`; i.e. assume responsability for implementing the interface.
